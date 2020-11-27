@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 PROJECT_NAME = 'backtradercn'
-
+rootPath = os.path.dirname(os.path.abspath(sys.argv[0]))
 # log setting
-LOG_DIR = '/tmp/'
+LOG_DIR = os.path.join(rootPath,'temp')
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
 
 # database setting

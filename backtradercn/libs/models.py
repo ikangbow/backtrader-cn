@@ -27,7 +27,6 @@ def get_library(lib_name):
     """
 
     store = get_store()
-
     lib = None
     if lib_name not in store.list_libraries():
         logger.debug(f'can not find library: {lib_name}.')
