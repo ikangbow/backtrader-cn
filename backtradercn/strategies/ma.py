@@ -51,7 +51,6 @@ class MATrendStrategy(bt.Strategy):
         ))
 
     def next(self):
-
         if self.order:
             return
 
