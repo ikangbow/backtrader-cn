@@ -1,9 +1,5 @@
 ## backtrader-cn
 
-[![Build Status](https://travis-ci.org/pandalibin/backtrader-cn.svg?branch=master)](https://travis-ci.org/pandalibin/backtrader-cn)
-[![Coverage Status](https://codecov.io/gh/pandalibin/backtrader-cn/branch/master/graph/badge.svg)](https://codecov.io/gh/pandalibin/backtrader-cn)
-[![Doc Status](https://readthedocs.org/projects/backtrader-cn/badge/?version=latest)](http://backtrader-cn.readthedocs.io/en/latest/?badge=latest)
-
 ### 快速上手
 
 python 版本
@@ -55,32 +51,22 @@ python 版本
 
 	$ python frm_main.py
 
-### 参与项目开发
+### 备注
 
-#### 安装项目需要的 `Python modules`
+使用方法
 
-	$ make pip
+1、运行data_main.py，使用tushare进行数据下载
 
-#### Python code check
+1.1、数据格式
+                open  high  close   low     volume
+    date                                          
+    2018-05-30  3.35  3.35   3.27  3.26  496207.09
+    2018-05-31  3.28  3.34   3.33  3.28  287609.91
 
-##### git hooks
+2、运行train_main.py,参数寻优
 
-提交代码前运行 `git-pylint-commit-hook`
+2.1、参数寻优：均线策略需要长短期两个值，bar的个数*0.1为短线，bar的个数*0.2为长线个数，即（1，2）（1，7）（1，12）。。。
 
-`.git/hooks/pre-commit` 文件内容：
+3、运行frm_main.py,计算进场信号
 
-	$ cat .git/hooks/pre-commit
-	#!/usr/bin/env bash
-	git-pylint-commit-hook
 
-添加执行权限:
-
-	$ chmod +x .git/hooks/pre-commit
-
-##### 自己运行 `pylint`
-
-	$ make lint
-
-##### 集成 Pylint 到 PyCharm
-
-[Integrate Pylint with PyCharm](https://docs.pylint.org/en/latest/user_guide/ide-integration.html#integrate-pylint-with-pycharm)
