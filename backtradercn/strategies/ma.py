@@ -270,9 +270,7 @@ class MATrendStrategy(bt.Strategy):
             max_drawdown_period=strat.analyzers.al_max_drawdown.get_analysis().get('maxdrawdownperiod'),
             drawdown_points=strat.analyzers.al_max_drawdown.get_analysis().get('drawdownpoints')
         )
-
-        # cerebro.plot()
-
+        cerebro.plot(style='candlestick', **bsu.Utils.KSTYLE)
         return al_result
 
     @classmethod
