@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 
 PROJECT_NAME = 'backtradercn'
-rootPath = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+'''***获取上上级目录***'''
+rootPath = os.path.abspath(os.path.join(os.getcwd(), "../.."))
 # log setting
-LOG_DIR = os.path.join(rootPath,'temp')
+LOG_DIR = os.path.join(rootPath,'log')
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
 
 # database setting
