@@ -236,7 +236,7 @@ class MATrendStrategy(bt.Strategy):
         cerebro = bt.Cerebro()
         data = bt.feeds.PandasData(dataname=data)
 
-        cerebro.adddata(data)
+        cerebro.adddata(data,name=stock_id)
         ma_periods = best_params.ma_periods
         cerebro.addstrategy(cls, ma_periods=dict(ma_period_s=ma_periods.get('ma_period_s'),
                                                  ma_period_l=ma_periods.get('ma_period_l'),

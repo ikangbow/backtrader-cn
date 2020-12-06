@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import time
+import os
+import pandas as pd
 from datetime import datetime, timedelta
 from backtradercn.libs.models import get_library
 from backtradercn.settings import settings as conf
@@ -27,15 +28,22 @@ def get_market_signal_by_date(date):
     return msg
 
 def print_Stock_Match():
+    RESULT_PATH = os.path.join(
+        conf.RESULT_DIR,
+        f'{datetime.now().strftime("%Y%m%d-%H%M%S-%f")}.csv'
+    )
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     msg = get_market_signal_by_date(date)
-    print(msg)
+    stocks = []
     for stock_code in msg['buy']:
         # 经过测试，每隔3S进行一次买入操作的频率最合适
-        time.sleep(3)
+        stocks.append(str(stock_code).zfill(6))
     else:
         logger.info("没有股票需要买入")
 
+    name=['code']
+    cn_stocks = pd.DataFrame(columns=name, data=stocks)
+    cn_stocks.to_csv(RESULT_PATH, index=False,encoding='utf_8_sig')
 
 if __name__ == '__main__':
     print_Stock_Match()
