@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+import os
 
 import pandas as pd
 
@@ -76,3 +77,13 @@ class Utils(object):
             lib.append(symbol, df)
         else:
             lib.write(symbol, df)
+
+    @classmethod
+    def write_to_csv(cls,write_clo):
+        RESULT_PATH = os.path.join(
+            conf.RESULT_DIR,
+            'result.csv'
+        )
+        df = pd.DataFrame(columns=(write_clo))
+        df.to_csv(RESULT_PATH, line_terminator="\n", index=False, mode='a',encoding='utf_8_sig')
+
