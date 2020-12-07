@@ -18,5 +18,7 @@ class QA_Fetch_Data():
         return ts_his_data.get_data()
 
 if __name__ == '__main__':
-    data = QA_Fetch_Data.get_data('600025');
+    df = QA_Fetch_Data.get_data('600025');
+    print('---------获取某月的数据-----------')
+    data = df['2020-11-11':'2020-12-04']  # 获取时间区间的值
     print(data)
