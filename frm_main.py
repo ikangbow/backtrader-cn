@@ -31,7 +31,7 @@ def back_test(stock):
         f'max drawdown period: {max_drawdown_period:.2f}'
     )
     best_params = bsm.MATrendStrategy.get_params(stock_id)
-    best_params_str = '{s}=={l}'.format(s=best_params.ma_periods.get('ma_period_s'), l = best_params.ma_periods.get('ma_period_l'))
+    best_params_str = '{s}&{l}'.format(s=best_params.ma_periods.get('ma_period_s'), l = best_params.ma_periods.get('ma_period_l'))
     stock = "'{:0>6}".format(stock_id)
     # write to csv
     write_clo = [ stock,trading_days,best_params_str, total_return_rate, max_drawdown,max_drawdown_period]
