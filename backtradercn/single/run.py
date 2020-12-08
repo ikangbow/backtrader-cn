@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os.path
-import datetime
 import pandas as pd
 import multiprocessing
 
@@ -65,7 +64,7 @@ if __name__ == '__main__':
     cn_stocks = []
     RESULT_PATH = os.path.join(
         conf.RESULT_DIR,
-        '20201206-193817-170628.csv'
+        'code.csv'
     )
     print(RESULT_PATH)
     df = pd.read_csv(RESULT_PATH, engine='python')
