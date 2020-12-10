@@ -229,6 +229,7 @@ class MATrendStrategy(bt.Strategy):
         """
         # get the data
         data = cls.get_data(stock_id)
+        #data = data['2020-8-8':'2020-12-08']  # 获取时间区间的值
         length = len(data)
         # get the params
         best_params = cls.get_params(stock_id)
@@ -270,7 +271,7 @@ class MATrendStrategy(bt.Strategy):
             max_drawdown_period=strat.analyzers.al_max_drawdown.get_analysis().get('maxdrawdownperiod'),
             drawdown_points=strat.analyzers.al_max_drawdown.get_analysis().get('drawdownpoints')
         )
-        cerebro.plot(style='candlestick', **bsu.Utils.KSTYLE)
+        #cerebro.plot(style='candlestick', **bsu.Utils.KSTYLE)
         return al_result
 
     @classmethod
