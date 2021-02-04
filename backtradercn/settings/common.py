@@ -15,33 +15,3 @@ CN_STOCK_LIBNAME = 'ts_his_lib'
 DAILY_STOCK_ALERT_LIBNAME = 'daily_stock_alert'
 STRATEGY_PARAMS_LIBNAME = 'strategy_params'
 STRATEGY_PARAMS_MA_SYMBOL = 'ma_trend'
-
-# wechat
-WECHAT_APP_ID = 'wx9cdc7629595d8ad2'
-WECHAT_APP_SECRET = '261eda6648c9d297137117174f2b9fb8'
-
-# xueqiu account
-XQ_ACCOUNT = os.getenv('XQ_ACCOUNT', '18210563565')
-XQ_PASSWORD = os.getenv('XQ_PASSWORD', 'kbw248655')
-XQ_PORTFOLIO_MARKET = os.getenv('XQ_PORTFOLIO_MARKET', 'cn')
-# 默认的组合前缀，组合名称格式为 组合前缀 + 股票代码
-# 组合名字
-XQ_CUBES_PREFIX = 'SC'
-# 默认创建组合时股票的初始百分数
-XQ_DEFAULT_BUY_WEIGHT = 5
-
-SINA_CONFIG = {
-    "username": os.getenv('WEIBO_USERNAME', '18210563565'),
-    "password": os.getenv('WEIBO_PASSWORD', 'kbw248655'),
-    "request_headers": {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
-        'Pragma': 'no-cache',
-        'Connection': 'keep-alive',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Encoding': 'gzip, deflate',
-        'Cache-Control': 'no-cache',
-        'Referer': 'http://jiaoyi.sina.com.cn/jy/index.php',
-        'Accept-Language': 'zh-CN,zh;q=0.8'
-    },
-    "login_url": "https://login.sina.com.cn/sso/login.php",
-}
