@@ -5,7 +5,6 @@ import backtradercn.strategies.ma as bsm
 import backtradercn.tasks as btasks
 from backtradercn.libs.log import get_logger
 from backtradercn.libs import models
-import backtradercn.strategies.utils as bsu
 
 logger = get_logger(__name__)
 
@@ -30,13 +29,6 @@ def back_test(stock):
         f'max drawdown: {max_drawdown:.2f}, '
         f'max drawdown period: {max_drawdown_period:.2f}'
     )
-    best_params = bsm.MATrendStrategy.get_params(stock_id)
-    best_params_str = '{s}&{l}'.format(s=best_params.ma_periods.get('ma_period_s'), l = best_params.ma_periods.get('ma_period_l'))
-    stock = "'{:0>6}".format(stock_id)
-    # write to csv
-    write_clo = [ stock,trading_days,best_params_str, total_return_rate, max_drawdown,max_drawdown_period]
-    print(write_clo)
-    bsu.Utils.write_to_csv(write_clo)
 
     drawdown_points = result.get('drawdown_points')
     logger.debug('Draw down points:')
@@ -56,6 +48,7 @@ def main(stock_pools):
     :param stock_pools: list, the stock code list.
     :return: None
     """
+
     pool = multiprocessing.Pool()
     for stock in stock_pools:
         pool.apply_async(back_test, args=(stock, ))
@@ -64,8 +57,5 @@ def main(stock_pools):
 
 
 if __name__ == '__main__':
-    # write to csv
-    write_clo = ["股票代码", "交易时间", "最优参数组合", "最大回报率", "最大回撤", "最大回撤周期"]
-    bsu.Utils.write_to_csv(write_clo)
     cn_stocks = models.get_cn_stocks()
     main(cn_stocks)
