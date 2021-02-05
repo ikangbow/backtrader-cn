@@ -10,6 +10,8 @@ import backtradercn.strategies.utils as bsu
 from backtradercn.settings import settings as conf
 from backtradercn.libs.log import get_logger
 from backtradercn.libs.models import get_or_create_library
+from backtrader_plotting import Bokeh
+from backtrader_plotting.schemes import Tradimo
 
 logger = get_logger(__name__)
 
@@ -51,6 +53,7 @@ class MATrendStrategy(bt.Strategy):
         ))
 
     def next(self):
+
         if self.order:
             return
 
@@ -229,7 +232,6 @@ class MATrendStrategy(bt.Strategy):
         """
         # get the data
         data = cls.get_data(stock_id)
-        #data = data['2020-8-8':'2020-12-08']  # 获取时间区间的值
         length = len(data)
         # get the params
         best_params = cls.get_params(stock_id)
@@ -237,7 +239,7 @@ class MATrendStrategy(bt.Strategy):
         cerebro = bt.Cerebro()
         data = bt.feeds.PandasData(dataname=data)
 
-        cerebro.adddata(data,name=stock_id)
+        cerebro.adddata(data, name=stock_id)
         ma_periods = best_params.ma_periods
         cerebro.addstrategy(cls, ma_periods=dict(ma_period_s=ma_periods.get('ma_period_s'),
                                                  ma_period_l=ma_periods.get('ma_period_l'),
@@ -271,7 +273,9 @@ class MATrendStrategy(bt.Strategy):
             max_drawdown_period=strat.analyzers.al_max_drawdown.get_analysis().get('maxdrawdownperiod'),
             drawdown_points=strat.analyzers.al_max_drawdown.get_analysis().get('drawdownpoints')
         )
-        # cerebro.plot(style='candlestick', **bsu.Utils.KSTYLE)
+        list = [ma_periods.get('stock_id'), '.html']
+        b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
+        cerebro.plot(b)
         return al_result
 
     @classmethod
