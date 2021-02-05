@@ -43,6 +43,7 @@ class MATrendStrategy(bt.Strategy):
         self.sma_l = bt.indicators.MovingAverageSimple(
             self.datas[0], period=self.params.ma_periods.get('ma_period_l')
         )
+        self.rsi = bt.indicators.RelativeStrengthIndex()
 
         self.order = None
 
@@ -58,7 +59,7 @@ class MATrendStrategy(bt.Strategy):
             return
 
         if not self.position:
-            if self.sma_s[0] > self.sma_l[0]:
+            if self.rsi < 30 and self.sma_s[0] > self.sma_l[0]:
                 # Using the current close price to calculate the size to buy, but use
                 # the next open price to executed, so it is possible that the order
                 # can not be executed due to margin, so set the target to 0.8 instead
@@ -75,7 +76,7 @@ class MATrendStrategy(bt.Strategy):
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
         else:
-            if self.sma_s[0] <= self.sma_l[0]:
+            if self.sma_s[0] < self.sma_l[0]:
                 target_short = 0.0
                 self.order = self.order_target_percent(target=target_short, valid=bt.Order.DAY)
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):

@@ -8,7 +8,7 @@ import json
 logger = get_logger(__name__)
 
 
-def update_sina_stock_match():
+def update__stock_match():
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     msg = get_market_signal_by_date(date)
     json_str = json.dumps(msg)
@@ -17,4 +17,4 @@ def update_sina_stock_match():
 
 
 if __name__ == '__main__':
-    update_sina_stock_match()
+    update__stock_match()
