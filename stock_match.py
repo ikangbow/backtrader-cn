@@ -11,9 +11,27 @@ logger = get_logger(__name__)
 def update__stock_match():
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     msg = get_market_signal_by_date(date)
-    json_str = json.dumps(msg)
-    print(json_str)
-    Mail().sendMail(date,json.dumps(msg), "1078162876@qq.com")
+    buy_msg = ''
+    sell_msg=''
+    if len(msg['buy']) == 0:
+        pass
+    else:
+        buy_msg = ','.join(msg['buy'])
+    if len(msg['sell']) == 0:
+        pass
+    else:
+        sell_msg = ','.join(msg['sell'])
+
+    if len(buy_msg)==0:
+        pass
+    else:
+        mm = '建议买入:'+buy_msg
+    if len(sell_msg)==0:
+        pass
+    else:
+        mm += ',建议卖出:'+sell_msg
+
+    Mail().sendMail(mm,date, "1078162876@qq.com")
 
 
 if __name__ == '__main__':
