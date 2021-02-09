@@ -13,6 +13,7 @@ def update__stock_match():
     msg = get_market_signal_by_date(date)
     buy_msg = ''
     sell_msg=''
+    mm = ''
     if len(msg['buy']) == 0:
         pass
     else:
@@ -25,14 +26,15 @@ def update__stock_match():
     if len(buy_msg)==0:
         pass
     else:
-        mm = '建议买入:'+buy_msg
+        mm += '建议买入:' + buy_msg
     if len(sell_msg)==0:
         pass
     else:
-        mm += ',建议卖出:'+sell_msg
-
-    Mail().sendMail(mm,date, "1078162876@qq.com")
-
+        mm += ',建议卖出:' + sell_msg
+    if len(mm)==0 :
+        pass
+    else:
+       Mail().sendMail(mm,date, "1078162876@qq.com")
 
 if __name__ == '__main__':
     update__stock_match()
