@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import backtradercn.strategies.ma as bsm
 import backtradercn.tasks as btasks
