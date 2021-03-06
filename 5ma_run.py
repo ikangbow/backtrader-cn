@@ -5,9 +5,9 @@ import backtradercn.strategies.utils as bsu
 import backtradercn.datas.tushare as bdt
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
-from backtradercn.strategies.basic_rsi import BasicRSI
+from backtradercn.strategies.basic_5ma import Basic5MA
 
-class RSI:
+class MA5:
     @classmethod
     def get_data(cls, coll_name):
         """
@@ -30,7 +30,7 @@ class RSI:
         data = bt.feeds.PandasData(dataname=data)
 
         cerebro.adddata(data, name=stock_id)
-        cerebro.addstrategy(BasicRSI)
+        cerebro.addstrategy(Basic5MA)
         cerebro.addanalyzer(bt.analyzers.TimeReturn, _name='al_return',
                             timeframe=bt.analyzers.TimeFrame.NoTimeFrame)
 
@@ -48,4 +48,4 @@ class RSI:
         cerebro.plot(b)
 
 if __name__ == '__main__':
-    RSI().run_back_testing("002024")
+    MA5().run_back_testing("002024")
