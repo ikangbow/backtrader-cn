@@ -58,3 +58,6 @@ class StrategyBase(bt.Strategy):
             return
 
         bsu.Utils.log(self.datas[0].datetime.date(),f'策略收益：毛收益 {trade.pnl:.2f}, 净收益 {trade.pnlcomm:.2f}')
+
+    def stop(self):
+        bsu.Utils.log(self.datas[0].datetime.date(), f'期末总资金：{self.broker.getvalue():.2f}')
