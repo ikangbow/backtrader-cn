@@ -1,11 +1,12 @@
 import backtrader as bt
-
+import multiprocessing
 import backtradercn.analyzers.drawdown as bad
 import backtradercn.strategies.utils as bsu
 import backtradercn.datas.tushare as bdt
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
 from backtradercn.strategies.basic_5ma import Basic5MA
+from backtradercn.libs import models
 
 class MA5:
     @classmethod
@@ -28,7 +29,6 @@ class MA5:
         data = cls.get_data(stock_id)
         cerebro = bt.Cerebro()
         data = bt.feeds.PandasData(dataname=data)
-
         cerebro.adddata(data, name=stock_id)
         cerebro.addstrategy(Basic5MA)
         cerebro.addanalyzer(bt.analyzers.TimeReturn, _name='al_return',
@@ -47,5 +47,20 @@ class MA5:
         b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
         cerebro.plot(b)
 
+    def main(cls,stock_pools):
+        """
+        Get all stocks and run back test.
+        :param stock_pools: list, the stock code list.
+        :return: None
+        """
+
+        pool = multiprocessing.Pool()
+        for stock in stock_pools:
+            pool.apply_async(MA5().run_back_testing, args=(stock, ))
+        pool.close()
+        pool.join()
+
 if __name__ == '__main__':
-    MA5().run_back_testing("002024")
+    MA5().run_back_testing("601788")
+    #cn_stocks = models.get_cn_stocks()
+    #MA5().main(cn_stocks)

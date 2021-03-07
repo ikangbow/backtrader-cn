@@ -39,13 +39,17 @@ class StrategyBase(bt.Strategy):
             if order.isbuy():
                 self.last_operation = "BUY"
                 bsu.Utils.log(self.datas[0].datetime.date(),
-                              f'买入==>价格:{order.executed.price},成本==>{order.executed.value:.2f},手续费==>{order.executed.comm:.2f}')
+                              'Stock %s buy Executed, portfolio value is %.2f' %
+                              (self.data._name,
+                               self.broker.get_value()))
 
             else:  # Sell
                 self.last_operation = "SELL"
                 self.reset_sell_indicators()
                 bsu.Utils.log(self.datas[0].datetime.date(),
-                              f'卖出==>价格:{order.executed.price},成本==>{order.executed.value:.2f},手续费==>{order.executed.comm:.2f}')
+                              'Stock %s sell Executed, portfolio value is %.2f' %
+                              (self.data._name,
+                               self.broker.get_value()))
             # Sentinel to None: new orders allowed
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             bsu.Utils.log(self.datas[0].datetime.date(),
@@ -56,8 +60,8 @@ class StrategyBase(bt.Strategy):
     def notify_trade(self, trade):
         if not trade.isclosed:
             return
-
-        bsu.Utils.log(self.datas[0].datetime.date(),f'策略收益：毛收益 {trade.pnl:.2f}, 净收益 {trade.pnlcomm:.2f}')
+        bsu.Utils.log(self.datas[0].datetime.date(), 'Stock %s,策略收益毛收益:%.2f,净收益:%.2f' %
+        (self.data._name,trade.pnl,trade.pnlcomm))
 
     def stop(self):
-        bsu.Utils.log(self.datas[0].datetime.date(), f'期末总资金：{self.broker.getvalue():.2f}')
+        bsu.Utils.log(self.datas[0].datetime.date(), '期末总资金:%.2f' %(self.broker.get_value()))

@@ -1,6 +1,8 @@
 import backtrader as bt
 
 from backtradercn.strategies.base import StrategyBase
+import datetime as dt
+import backtradercn.strategies.utils as bsu
 
 class Basic5MA(StrategyBase):
     params = dict(
@@ -38,7 +40,6 @@ class Basic5MA(StrategyBase):
         self.min4 = min(self.min3, self.ema_60)
         # 粘合度
         self.stickness = (self.max4 - self.min4) / self.min4 * 100
-        print(self.stickness)
         if self.stickness < self.p.maperiod_stick:
             self.stick_n += 1
         else:
@@ -54,7 +55,17 @@ class Basic5MA(StrategyBase):
             if self.ema_5 > self.ema_10 and self.ema_10 > self.ema_20 and self.ema_20 > self.ema_30 and self.ema_30 > self.ema_60 and self.stick_n > self.p.maperiod_days:
                 self.long()
                 self.buy_price_close = self.data0.close[0]
+                if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
+                    stock_id = self.data._name
+                    symbol = dt.datetime.now().strftime('%Y-%m-%d')
+                    action = 'buy'
+                    bsu.Utils.write_daily_alert(symbol, stock_id, action)
 
         if self.last_operation != "SELL":
             if self.rsi > 70 or self.profit < -0.02:
                 self.short()
+                if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
+                    stock_id = self.data._name
+                    symbol = dt.datetime.now().strftime('%Y-%m-%d')
+                    action = 'sell'
+                    bsu.Utils.write_daily_alert(symbol, stock_id, action)
