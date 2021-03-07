@@ -28,8 +28,8 @@ class Basic5MA(StrategyBase):
 
     def update_indicators(self):
         self.profit = 0
-        if self.buy_price_close and self.buy_price_close > 0:
-            self.profit = float(self.data0.close[0] - self.buy_price_close) / self.buy_price_close
+        if self.buy_price and self.buy_price > 0:
+            self.profit = float(self.data0.close[0] - self.buy_price) / self.buy_price
         self.max1 = max(self.ema_5, self.ema_10)
         self.max2 = max(self.max1, self.ema_20)
         self.max3 = max(self.max2, self.ema_30)
@@ -54,7 +54,7 @@ class Basic5MA(StrategyBase):
         if self.last_operation != "BUY":
             if self.ema_5 > self.ema_10 and self.ema_10 > self.ema_20 and self.ema_20 > self.ema_30 and self.ema_30 > self.ema_60 and self.stick_n > self.p.maperiod_days:
                 self.long()
-                self.buy_price_close = self.data0.close[0]
+                self.buy_price = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
@@ -62,8 +62,9 @@ class Basic5MA(StrategyBase):
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
 
         if self.last_operation != "SELL":
-            if self.rsi > 70 or self.profit < -0.02:
+            if self.ema_5 < self.ema_10 or self.profit < -0.02:
                 self.short()
+                self.reset_sell_indicators()
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')

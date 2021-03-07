@@ -10,11 +10,11 @@ class StrategyBase(bt.Strategy):
         self.order = None
         self.last_operation = "SELL"
         self.bar_executed = 0
-        self.buy_price_close = None
+        self.buy_price = None
         logger.debug('>>Starting strategy...')
 
     def reset_sell_indicators(self):
-        self.buy_price_close = None
+        self.buy_price_ = None
 
     def short(self):
         if self.last_operation == "SELL":
