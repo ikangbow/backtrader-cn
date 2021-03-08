@@ -274,9 +274,10 @@ class MATrendStrategy(bt.Strategy):
             max_drawdown_period=strat.analyzers.al_max_drawdown.get_analysis().get('maxdrawdownperiod'),
             drawdown_points=strat.analyzers.al_max_drawdown.get_analysis().get('drawdownpoints')
         )
-        list = [ma_periods.get('stock_id'), '.html']
-        b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
-        cerebro.plot(b)
+        if conf.DEBUG:
+            list = [ma_periods.get('stock_id'), '.html']
+            b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
+            cerebro.plot(b)
         return al_result
 
     @classmethod

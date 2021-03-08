@@ -6,7 +6,9 @@ import backtradercn.datas.tushare as bdt
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
 from backtradercn.strategies.basic_5ma import Basic5MA
+from backtradercn.settings import settings as conf
 from backtradercn.libs import models
+
 
 class MA5:
     @classmethod
@@ -19,6 +21,7 @@ class MA5:
         ts_his_data = bdt.TsHisData(coll_name)
 
         return ts_his_data.get_data()
+
     def run_back_testing(cls, stock_id):
         """
         Run the back testing, return the analysis data.
@@ -43,11 +46,12 @@ class MA5:
         cerebro.broker.setcommission(commission=0.005)
 
         cerebro.run()
-        list = [stock_id, '.html']
-        b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
-        cerebro.plot(b)
+        if conf.DEBUG:
+            list = [stock_id, '.html']
+            b = Bokeh(style='bar', plot_mode='single', scheme=Tradimo(), filename=''.join(list), output_mode='show')
+            cerebro.plot(b)
 
-    def main(cls,stock_pools):
+    def main(cls, stock_pools):
         """
         Get all stocks and run back test.
         :param stock_pools: list, the stock code list.
@@ -56,11 +60,12 @@ class MA5:
 
         pool = multiprocessing.Pool()
         for stock in stock_pools:
-            pool.apply_async(MA5().run_back_testing, args=(stock, ))
+            pool.apply_async(MA5().run_back_testing, args=(stock,))
         pool.close()
         pool.join()
 
+
 if __name__ == '__main__':
     MA5().run_back_testing("601788")
-    #cn_stocks = models.get_cn_stocks()
-    #MA5().main(cn_stocks)
+    # cn_stocks = models.get_cn_stocks()
+    # MA5().main(cn_stocks)

@@ -3,6 +3,10 @@ import backtrader as bt
 from backtradercn.strategies.base import StrategyBase
 import datetime as dt
 import backtradercn.strategies.utils as bsu
+from backtradercn.libs.log import get_logger
+
+logger = get_logger(__name__)
+
 
 class Basic5MA(StrategyBase):
     params = dict(
@@ -11,8 +15,8 @@ class Basic5MA(StrategyBase):
         maperiod_20=20,
         maperiod_30=30,
         maperiod_60=60,
-        maperiod_stick = 8,
-        maperiod_days = 4
+        maperiod_stick=8,
+        maperiod_days=4
     )
 
     def __init__(self):
@@ -52,7 +56,7 @@ class Basic5MA(StrategyBase):
             return
 
         if self.last_operation != "BUY":
-            if self.ema_5 > self.ema_10 and self.ema_10 > self.ema_20 and self.ema_20 > self.ema_30 and self.ema_30 > self.ema_60 and self.stick_n > self.p.maperiod_days:
+            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0]:
                 self.long()
                 self.buy_price_close = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
@@ -62,10 +66,11 @@ class Basic5MA(StrategyBase):
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
 
         if self.last_operation != "SELL":
-            if self.rsi > 70 or self.profit < -0.02:
+            if (self.ema_5[0] < self.ema_10[0] and self.profit >= 0.05) or self.profit < -0.03:
                 self.short()
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
                     action = 'sell'
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
+

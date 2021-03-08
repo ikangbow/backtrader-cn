@@ -8,6 +8,7 @@ rootPath = os.path.abspath(os.path.join(os.getcwd(), "../.."))
 # log setting
 LOG_DIR = os.path.join(rootPath,'log')
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
+DEBUG = True
 
 # database setting
 MONGO_HOST = 'localhost'
