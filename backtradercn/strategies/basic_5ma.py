@@ -1,8 +1,10 @@
 import backtrader as bt
 
 from backtradercn.strategies.base import StrategyBase
+from backtradercn.strategies import BreakIndicator as bi
 import datetime as dt
 import backtradercn.strategies.utils as bsu
+import math
 from backtradercn.libs.log import get_logger
 
 logger = get_logger(__name__)
@@ -27,6 +29,14 @@ class Basic5MA(StrategyBase):
         self.ema_30 = bt.indicators.EMA(period=self.p.maperiod_30)
         self.ema_60 = bt.indicators.EMA(period=self.p.maperiod_60)
         self.rsi = bt.indicators.RelativeStrengthIndex()
+        self.upAndDown = bi.BreakIndicator(self.data)
+        self.buysig = bt.indicators.CrossOver(self.datas[0].close, self.upAndDown.up)
+        self.sellsig = bt.indicators.CrossDown(self.datas[0].close, self.upAndDown.down)
+        # 图上显示上下轨
+        self.upAndDown.plotinfo.plotmaster = self.data
+        # 图上不显示买卖信号
+        self.buysig.plotinfo.plot = False
+        self.sellsig.plotinfo.plot = False
         self.stick_n = 0
         self.profit = 0
 
@@ -56,7 +66,7 @@ class Basic5MA(StrategyBase):
             return
 
         if self.last_operation != "BUY":
-            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0]:
+            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig == 1:
                 self.long()
                 self.buy_price_close = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
