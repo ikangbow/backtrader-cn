@@ -5,7 +5,7 @@ import backtradercn.strategies.utils as bsu
 import backtradercn.datas.tushare as bdt
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
-from backtradercn.strategies.basic_5ma import Basic5MA
+from backtradercn.strategies.basic_ma import Basic5MA
 from backtradercn.settings import settings as conf
 from backtradercn.libs import models
 

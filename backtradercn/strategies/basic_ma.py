@@ -1,10 +1,9 @@
 import backtrader as bt
 
 from backtradercn.strategies.base import StrategyBase
-from backtradercn.strategies import BreakIndicator as bi
+from backtradercn.indicator import BreakIndicator as bi, MAIndicator as ma
 import datetime as dt
 import backtradercn.strategies.utils as bsu
-import math
 from backtradercn.libs.log import get_logger
 
 logger = get_logger(__name__)
@@ -12,23 +11,21 @@ logger = get_logger(__name__)
 
 class Basic5MA(StrategyBase):
     params = dict(
-        maperiod_5=5,
-        maperiod_10=10,
-        maperiod_20=20,
-        maperiod_30=30,
-        maperiod_60=60,
         maperiod_stick=8,
         maperiod_days=4
     )
 
     def __init__(self):
         StrategyBase.__init__(self)
-        self.ema_5 = bt.indicators.EMA(period=self.p.maperiod_5)
-        self.ema_10 = bt.indicators.EMA(period=self.p.maperiod_10)
-        self.ema_20 = bt.indicators.EMA(period=self.p.maperiod_20)
-        self.ema_30 = bt.indicators.EMA(period=self.p.maperiod_30)
-        self.ema_60 = bt.indicators.EMA(period=self.p.maperiod_60)
+        self.multiaverage = ma.MAIndicator(self.data)
+        self.ema_5 = self.multiaverage.ma_5
+        self.ema_10 = self.multiaverage.ma_10
+        self.ema_20 = self.multiaverage.ma_20
+        self.ema_30 = self.multiaverage.ma_30
+        self.ema_60 = self.multiaverage.ma_60
+        # rsi
         self.rsi = bt.indicators.RelativeStrengthIndex()
+        # 唐安奇通道
         self.upAndDown = bi.BreakIndicator(self.data)
         self.buysig = bt.indicators.CrossOver(self.datas[0].close, self.upAndDown.up)
         self.sellsig = bt.indicators.CrossDown(self.datas[0].close, self.upAndDown.down)
