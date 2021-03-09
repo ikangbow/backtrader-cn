@@ -39,16 +39,16 @@ class StrategyBase(bt.Strategy):
             if order.isbuy():
                 self.last_operation = "BUY"
                 bsu.Utils.log(self.datas[0].datetime.date(),
-                              'Stock %s buy Executed, portfolio value is %.2f' %
-                              (self.data._name,
+                              'Stock %s buy Executed,price is  %.2f, portfolio value is %.2f' %
+                              (self.data._name, order.executed.price,
                                self.broker.get_value()))
 
             else:  # Sell
                 self.last_operation = "SELL"
                 self.reset_sell_indicators()
                 bsu.Utils.log(self.datas[0].datetime.date(),
-                              'Stock %s sell Executed, portfolio value is %.2f' %
-                              (self.data._name,
+                              'Stock %s sell Executed,price is  %.2f, portfolio value is %.2f' %
+                              (self.data._name,order.executed.price,
                                self.broker.get_value()))
             # Sentinel to None: new orders allowed
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:

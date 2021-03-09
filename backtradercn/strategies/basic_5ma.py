@@ -1,8 +1,14 @@
 import backtrader as bt
 
 from backtradercn.strategies.base import StrategyBase
+from backtradercn.strategies import BreakIndicator as bi
 import datetime as dt
 import backtradercn.strategies.utils as bsu
+import math
+from backtradercn.libs.log import get_logger
+
+logger = get_logger(__name__)
+
 
 class Basic5MA(StrategyBase):
     params = dict(
@@ -11,8 +17,8 @@ class Basic5MA(StrategyBase):
         maperiod_20=20,
         maperiod_30=30,
         maperiod_60=60,
-        maperiod_stick = 8,
-        maperiod_days = 4
+        maperiod_stick=8,
+        maperiod_days=4
     )
 
     def __init__(self):
@@ -23,13 +29,21 @@ class Basic5MA(StrategyBase):
         self.ema_30 = bt.indicators.EMA(period=self.p.maperiod_30)
         self.ema_60 = bt.indicators.EMA(period=self.p.maperiod_60)
         self.rsi = bt.indicators.RelativeStrengthIndex()
+        self.upAndDown = bi.BreakIndicator(self.data)
+        self.buysig = bt.indicators.CrossOver(self.datas[0].close, self.upAndDown.up)
+        self.sellsig = bt.indicators.CrossDown(self.datas[0].close, self.upAndDown.down)
+        # 图上显示上下轨
+        self.upAndDown.plotinfo.plotmaster = self.data
+        # 图上不显示买卖信号
+        self.buysig.plotinfo.plot = False
+        self.sellsig.plotinfo.plot = False
         self.stick_n = 0
         self.profit = 0
 
     def update_indicators(self):
         self.profit = 0
-        if self.buy_price and self.buy_price > 0:
-            self.profit = float(self.data0.close[0] - self.buy_price) / self.buy_price
+        if self.buy_price_close and self.buy_price_close > 0:
+            self.profit = float(self.data0.close[0] - self.buy_price_close) / self.buy_price_close
         self.max1 = max(self.ema_5, self.ema_10)
         self.max2 = max(self.max1, self.ema_20)
         self.max3 = max(self.max2, self.ema_30)
@@ -52,9 +66,9 @@ class Basic5MA(StrategyBase):
             return
 
         if self.last_operation != "BUY":
-            if self.ema_5 > self.ema_10 and self.ema_10 > self.ema_20 and self.ema_20 > self.ema_30 and self.ema_30 > self.ema_60 and self.stick_n > self.p.maperiod_days:
+            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig == 1:
                 self.long()
-                self.buy_price = self.data0.close[0]
+                self.buy_price_close = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
@@ -62,11 +76,11 @@ class Basic5MA(StrategyBase):
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
 
         if self.last_operation != "SELL":
-            if self.ema_5 < self.ema_10 or self.profit < -0.02:
+            if (self.ema_5[0] < self.ema_10[0] and self.profit >= 0.05) or self.profit < -0.03:
                 self.short()
-                self.reset_sell_indicators()
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
                     action = 'sell'
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
+
