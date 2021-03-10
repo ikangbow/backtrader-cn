@@ -66,6 +66,6 @@ class MA5:
 
 
 if __name__ == '__main__':
-    MA5().run_back_testing("601788")
-    # cn_stocks = models.get_cn_stocks()
-    # MA5().main(cn_stocks)
+    #MA5().run_back_testing("601788")
+    cn_stocks = models.get_cn_stocks()
+    MA5().main(cn_stocks)

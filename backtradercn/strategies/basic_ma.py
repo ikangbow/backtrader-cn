@@ -25,6 +25,7 @@ class Basic5MA(StrategyBase):
         self.ema_60 = self.multiaverage.ma_60
         # rsi
         self.rsi = bt.indicators.RelativeStrengthIndex()
+        self.rsi.plotinfo.plot = False
         # 唐安奇通道
         self.upAndDown = bi.BreakIndicator(self.data)
         self.buysig = bt.indicators.CrossOver(self.datas[0].close, self.upAndDown.up)
@@ -34,6 +35,8 @@ class Basic5MA(StrategyBase):
         # 图上不显示买卖信号
         self.buysig.plotinfo.plot = False
         self.sellsig.plotinfo.plot = False
+        # 主图上显示均线
+        self.multiaverage.plotinfo.plotmaster = self.data
         self.stick_n = 0
         self.profit = 0
 
@@ -63,8 +66,9 @@ class Basic5MA(StrategyBase):
             return
 
         if self.last_operation != "BUY":
-            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig == 1:
+            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig[0] == 1:
                 self.long()
+                logger.debug(f'buysig is {self.buysig[0]}')
                 self.buy_price_close = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
