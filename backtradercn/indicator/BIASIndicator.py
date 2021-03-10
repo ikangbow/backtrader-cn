@@ -3,7 +3,7 @@ import backtrader.indicators as btind
 
 
 # 乖离率
-class BIAS(bt.Indicator):
+class BIASIndicator(bt.Indicator):
     lines = ('short', 'long')
     params = (('short_period', 5), ('long_period', 45))
 

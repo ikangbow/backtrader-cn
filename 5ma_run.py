@@ -5,7 +5,7 @@ import backtradercn.strategies.utils as bsu
 import backtradercn.datas.tushare as bdt
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
-from backtradercn.strategies.basic_5ma import Basic5MA
+from backtradercn.strategies.basic_ma import Basic5MA
 from backtradercn.settings import settings as conf
 from backtradercn.libs import models
 
@@ -66,6 +66,6 @@ class MA5:
 
 
 if __name__ == '__main__':
-    MA5().run_back_testing("601788")
-    # cn_stocks = models.get_cn_stocks()
-    # MA5().main(cn_stocks)
+    #MA5().run_back_testing("601788")
+    cn_stocks = models.get_cn_stocks()
+    MA5().main(cn_stocks)
