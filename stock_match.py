@@ -11,6 +11,7 @@ logger = get_logger(__name__)
 def update__stock_match():
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     msg = get_market_signal_by_date(date)
+    print(msg)
     buy_msg = ''
     sell_msg=''
     mm = ''

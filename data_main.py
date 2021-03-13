@@ -35,11 +35,8 @@ if __name__ == '__main__':
     # make sure the library exists
     models.get_or_create_library(conf.CN_STOCK_LIBNAME)
 
-    # download_delta_data(['000651', '000001'])
-
     hs300s = ts.get_hs300s()
-    # stock_pools = hs300s['code'].tolist() if 'code' in hs300s else []
-    stock_pools = ["300727", "300706", "002248", "002475", "000858"]
+    stock_pools = hs300s['code'].tolist() if 'code' in hs300s else []
     if not stock_pools:
         logger.warning('can not ts.geths300s() return empty.')
         stock_pools = models.get_cn_stocks()
