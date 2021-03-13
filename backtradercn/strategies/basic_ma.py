@@ -42,8 +42,8 @@ class Basic5MA(StrategyBase):
 
     def update_indicators(self):
         self.profit = 0
-        if self.buy_price_close and self.buy_price_close > 0:
-            self.profit = float(self.data0.close[0] - self.buy_price_close) / self.buy_price_close
+        if self.buy_price and self.buy_price > 0:
+            self.profit = float(self.data0.close[0] - self.buy_price) / self.buy_price
         self.max1 = max(self.ema_5, self.ema_10)
         self.max2 = max(self.max1, self.ema_20)
         self.max3 = max(self.max2, self.ema_30)
@@ -68,8 +68,7 @@ class Basic5MA(StrategyBase):
         if self.last_operation != "BUY":
             if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig[0] == 1:
                 self.long()
-                logger.debug(f'buysig is {self.buysig[0]}')
-                self.buy_price_close = self.data0.close[0]
+                self.buy_price = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
                     stock_id = self.data._name
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
