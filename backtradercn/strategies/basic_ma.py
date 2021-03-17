@@ -1,7 +1,7 @@
 import backtrader as bt
 
 from backtradercn.strategies.base import StrategyBase
-from backtradercn.indicator import BreakIndicator as bi, MAIndicator as ma
+from backtradercn.indicator import BreakIndicator as bi, MAIndicator as ma, ATRIndictor as at
 import datetime as dt
 import backtradercn.strategies.utils as bsu
 from backtradercn.libs.log import get_logger
@@ -37,6 +37,9 @@ class Basic5MA(StrategyBase):
         self.sellsig.plotinfo.plot = False
         # 主图上显示均线
         self.multiaverage.plotinfo.plotmaster = self.data
+        # 波动率指标
+        self.atr = at.ATRIndicator(self.data)
+        self.atr.plotinfo.plotmaster = self.data
         self.stick_n = 0
         self.profit = 0
 
@@ -66,7 +69,8 @@ class Basic5MA(StrategyBase):
             return
 
         if self.last_operation != "BUY":
-            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[0] and self.ema_30[0] > self.ema_60[0] and self.buysig[0] == 1:
+            if self.ema_5[0] > self.ema_10[0] and self.ema_10[0] > self.ema_20[0] and self.ema_20[0] > self.ema_30[
+                0] and self.ema_30[0] > self.ema_60[0] and self.buysig[0] == 1 and self.data0.close[0] > (self.data0.close[-1]+ self.atr[0]):
                 self.long()
                 self.buy_price = self.data0.close[0]
                 if self.datas[0].datetime.date() == dt.datetime.now().date() - dt.timedelta(days=1):
@@ -83,4 +87,3 @@ class Basic5MA(StrategyBase):
                     symbol = dt.datetime.now().strftime('%Y-%m-%d')
                     action = 'sell'
                     bsu.Utils.write_daily_alert(symbol, stock_id, action)
-
